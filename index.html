@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tony — Engineering & Design Portfolio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-weight='90' fill='%23FFD60A'>T</text></svg>">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Patrick+Hand&display=swap">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper: #ffffff;
+  --ink: #1a1a1a;
+  --ink-light: #555;
+  --yellow: #ffd60a;
+  --pink: #ff2d78;
+  --cyan: #00c8e5;
+  --orange: #ff6b1a;
+  --green: #7ed321;
+  --tape: rgba(255, 214, 10, 0.9);
+  --shadow-hard: 4px 4px 0 var(--ink);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.deco {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
+}
+.deco svg { display: block; }
+
+/* ===== Progress Rail ===== */
+.progress-rail {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.progress-dot {
+  width: 16px; height: 16px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+}
+.progress-dot.active {
+  background: var(--yellow);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.progress-dot::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 28px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+  letter-spacing: 0.5px;
+}
+.progress-dot:hover::after,
+.progress-dot.active::after { opacity: 1; }
+
+/* ===== Hero ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 60px 40px;
+  z-index: 2;
+}
+
+.hero-tag {
+  position: absolute;
+  top: 40px; right: 40px;
+  background: var(--pink);
+  color: #fff;
+  padding: 10px 18px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  transform: rotate(3deg);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+
+.hero-big {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  font-size: clamp(80px, 18vw, 220px);
+  line-height: 0.9;
+  color: var(--ink);
+  text-transform: uppercase;
+  position: relative;
+  letter-spacing: -2px;
+  -webkit-text-stroke: 3px var(--ink);
+  paint-order: stroke fill;
+}
+
+.hero-bubble {
+  position: absolute;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  padding: 12px 20px;
+  font-family: 'Patrick Hand', 'Noto Sans SC', cursive;
+  font-size: 20px;
+  box-shadow: var(--shadow-hard);
+}
+.hero-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -12px; left: 30px;
+  width: 0; height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid var(--ink);
+}
+.hero-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -7px; left: 32px;
+  width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #fff;
+  z-index: 1;
+}
+.hero-bubble-1 { top: 20%; right: 15%; transform: rotate(-5deg); }
+.hero-bubble-2 { bottom: 25%; left: 12%; transform: rotate(4deg); }
+
+.hero-sub {
+  margin-top: 48px;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ink);
+  text-align: center;
+  max-width: 520px;
+  line-height: 2.2;
+  position: relative;
+  z-index: 2;
+}
+.hero-sub strong {
+  color: var(--pink);
+  font-weight: 700;
+  background: linear-gradient(transparent 60%, var(--yellow) 60%);
+  padding: 0 4px;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 40px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  font-weight: 700;
+  animation: bounce 2s infinite;
+  z-index: 2;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ===== Projects ===== */
+.project {
+  padding: 100px 40px;
+  position: relative;
+  border-top: 3px dashed rgba(0,0,0,0.15);
+  z-index: 2;
+}
+.project-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+
+.project-number {
+  position: absolute;
+  top: 40px; right: 20px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(80px, 12vw, 160px);
+  line-height: 1;
+  opacity: 0.06;
+  color: var(--ink);
+  pointer-events: none;
+  user-select: none;
+}
+
+.project-tag {
+  display: inline-block;
+  padding: 8px 18px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #fff;
+  margin-bottom: 12px;
+  transform: rotate(-1.5deg);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+.project:nth-of-type(2) .project-tag { background: var(--yellow); color: var(--ink); }
+.project:nth-of-type(3) .project-tag { background: var(--pink); }
+.project:nth-of-type(4) .project-tag { background: var(--cyan); color: var(--ink); }
+.project:nth-of-type(5) .project-tag { background: var(--orange); }
+.project:nth-of-type(6) .project-tag { background: var(--green); }
+
+.project-date {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 6px 14px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  transform: rotate(1deg);
+}
+
+.project h2 {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.1;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+
+.project-subtitle {
+  font-size: 17px;
+  color: var(--ink-light);
+  margin-bottom: 20px;
+  font-weight: 400;
+  max-width: 760px;
+  line-height: 1.7;
+}
+
+/* ===== Tech chips ===== */
+.tech-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.tech-chip {
+  display: inline-block;
+  padding: 6px 14px;
+  font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 2px 2px 0 var(--ink);
+  transform: rotate(-0.8deg);
+}
+.tech-chip:nth-child(even) { transform: rotate(0.8deg); }
+
+.project:nth-of-type(2) .tech-chip { background: var(--yellow); }
+.project:nth-of-type(3) .tech-chip { background: var(--pink); color: #fff; }
+.project:nth-of-type(4) .tech-chip { background: var(--cyan); }
+.project:nth-of-type(5) .tech-chip { background: var(--orange); color: #fff; }
+.project:nth-of-type(6) .tech-chip { background: var(--green); }
+
+/* ===== Image Carousel ===== */
+.carousel {
+  position: relative;
+  margin-bottom: 32px;
+  user-select: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
+}
+.carousel-track::-webkit-scrollbar { height: 6px; }
+.carousel-track::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
+.carousel-track::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+
+.carousel-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  position: relative;
+}
+@media (min-width: 768px) {
+  .carousel-slide { flex: 0 0 calc(50% - 8px); }
+}
+
+.img-placeholder {
+  background: #f8f8f5;
+  border: 3px dashed rgba(0,0,0,0.2);
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+}
+.img-placeholder .placeholder-label {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(0,0,0,0.3);
+}
+.img-placeholder .placeholder-note {
+  font-size: 12px;
+  color: rgba(0,0,0,0.25);
+  font-weight: 400;
+  text-align: center;
+  padding: 0 16px;
+}
+.img-placeholder::before {
+  content: '';
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 80px; height: 22px;
+  background: var(--tape);
+  border: 2px solid rgba(0,0,0,0.1);
+}
+
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.carousel-btn {
+  width: 40px; height: 40px;
+  border: 3px solid var(--ink);
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: all 0.15s;
+}
+.carousel-btn:hover { background: var(--yellow); transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+.carousel-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+.carousel-dots { display: flex; gap: 8px; }
+.carousel-dot {
+  width: 10px; height: 10px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+}
+.carousel-dot.active { background: var(--ink); }
+
+/* ===== Project Content Grid ===== */
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 32px;
+}
+
+.project-block h3 {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid;
+  display: inline-block;
+}
+.project:nth-of-type(2) .project-block h3 { border-color: var(--yellow); color: #cc9900; }
+.project:nth-of-type(3) .project-block h3 { border-color: var(--pink); color: var(--pink); }
+.project:nth-of-type(4) .project-block h3 { border-color: var(--cyan); color: #0099b5; }
+.project:nth-of-type(5) .project-block h3 { border-color: var(--orange); color: var(--orange); }
+.project:nth-of-type(6) .project-block h3 { border-color: #5a9e00; color: #5a9e00; }
+
+.project-block p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-light);
+  margin-bottom: 12px;
+}
+
+.project-block ul { list-style: none; padding: 0; }
+.project-block ul li {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-light);
+  padding-left: 24px;
+  position: relative;
+  margin-bottom: 8px;
+}
+.project-block ul li::before {
+  content: '★';
+  position: absolute;
+  left: 0;
+  color: var(--yellow);
+  font-size: 14px;
+}
+
+/* ===== Problem Solved (wide block) ===== */
+.problem-block {
+  background: #f8f8f5;
+  border: 3px dashed rgba(0,0,0,0.2);
+  padding: 20px 24px;
+  margin-bottom: 32px;
+}
+.problem-block h3 {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+  display: inline-block;
+  padding: 4px 12px;
+  border: 2px solid var(--ink);
+}
+.project:nth-of-type(2) .problem-block h3 { background: var(--yellow); }
+.project:nth-of-type(3) .problem-block h3 { background: var(--pink); color: #fff; }
+.project:nth-of-type(4) .problem-block h3 { background: var(--cyan); }
+.project:nth-of-type(5) .problem-block h3 { background: var(--orange); color: #fff; }
+.project:nth-of-type(6) .problem-block h3 { background: var(--green); }
+.problem-block p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-light);
+}
+
+/* ===== Status Callout ===== */
+.status-callout {
+  background: #fff;
+  color: var(--ink);
+  padding: 24px 28px;
+  margin-top: 8px;
+  position: relative;
+  transform: rotate(-0.5deg);
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--ink);
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.status-icon {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.project:nth-of-type(2) .status-icon { background: var(--yellow); }
+.project:nth-of-type(3) .status-icon { background: var(--pink); }
+.project:nth-of-type(4) .status-icon { background: var(--cyan); }
+.project:nth-of-type(5) .status-icon { background: var(--orange); }
+.project:nth-of-type(6) .status-icon { background: var(--green); }
+
+.status-content { flex: 1; }
+.status-label {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.status-callout p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--ink-light);
+  font-weight: 400;
+}
+
+/* ===== Footer ===== */
+.footer {
+  padding: 80px 40px 60px;
+  text-align: center;
+  border-top: 3px dashed rgba(0,0,0,0.15);
+  position: relative;
+  z-index: 2;
+}
+.footer-tag {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--ink);
+  padding: 12px 28px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  transform: rotate(-1deg);
+  margin-bottom: 24px;
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+.footer p {
+  font-size: 14px;
+  color: var(--ink-light);
+  font-weight: 400;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .progress-rail { display: none; }
+  .project-number { display: none; }
+  .project-grid { grid-template-columns: 1fr; gap: 32px; }
+  .hero { padding: 40px 24px; }
+  .hero-tag { top: 20px; right: 20px; }
+  .hero-bubble-1 { right: 5%; top: 15%; font-size: 16px; padding: 8px 14px; }
+  .hero-bubble-2 { left: 5%; bottom: 20%; font-size: 16px; padding: 8px 14px; }
+  .project { padding: 60px 24px; }
+  .deco { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Cartoon Decorations ===== -->
+<div class="deco" style="top: 15%; left: 8%; transform: rotate(-15deg);">
+  <svg width="48" height="60" viewBox="0 0 48 60" fill="none">
+    <rect x="14" y="2" width="20" height="30" rx="10" fill="#1a1a1a"/>
+    <rect x="18" y="8" width="12" height="3" rx="1.5" fill="#ffd60a"/>
+    <rect x="18" y="14" width="12" height="3" rx="1.5" fill="#ffd60a"/>
+    <rect x="18" y="20" width="12" height="3" rx="1.5" fill="#ffd60a"/>
+    <path d="M24 32 L24 44" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/>
+    <path d="M16 44 L32 44" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/>
+  </svg>
+</div>
+
+<div class="deco" style="top: 22%; right: 12%; transform: rotate(10deg);">
+  <svg width="36" height="48" viewBox="0 0 36 48" fill="none">
+    <ellipse cx="10" cy="40" rx="8" ry="6" fill="#ff2d78" transform="rotate(-20 10 40)"/>
+    <path d="M18 38 L18 6 L30 2" stroke="#1a1a1a" stroke-width="3" fill="none"/>
+    <path d="M18 6 L30 2 L30 14 L18 18" fill="#ff2d78" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<div class="deco" style="bottom: 30%; left: 20%; transform: rotate(-8deg);">
+  <svg width="24" height="32" viewBox="0 0 24 32" fill="none">
+    <ellipse cx="7" cy="26" rx="6" ry="4.5" fill="#00c8e5" transform="rotate(-20 7 26)"/>
+    <path d="M13 24 L13 4 L21 1" stroke="#1a1a1a" stroke-width="2.5" fill="none"/>
+  </svg>
+</div>
+
+<div class="deco" style="top: 35%; right: 8%; transform: rotate(5deg);">
+  <svg width="60" height="70" viewBox="0 0 60 70" fill="none">
+    <path d="M10 10 Q30 35 50 10" stroke="#1a1a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="10" cy="10" r="3" fill="#ffd60a" stroke="#1a1a1a" stroke-width="2"/>
+    <circle cx="20" cy="20" r="2.5" fill="#ff2d78" stroke="#1a1a1a" stroke-width="1.5"/>
+    <circle cx="30" cy="26" r="3" fill="#00c8e5" stroke="#1a1a1a" stroke-width="2"/>
+    <circle cx="40" cy="20" r="2.5" fill="#ff6b1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <circle cx="50" cy="10" r="3" fill="#7ed321" stroke="#1a1a1a" stroke-width="2"/>
+    <path d="M30 29 L30 42" stroke="#1a1a1a" stroke-width="2"/>
+    <polygon points="30,55 24,44 36,44" fill="#ffd60a" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<div class="deco" style="top: 8%; left: 30%; transform: rotate(-10deg);">
+  <svg width="28" height="28" viewBox="0 0 28 28">
+    <polygon points="14,2 17,10 26,10 19,16 22,25 14,19 6,25 9,16 2,10 11,10"
+      fill="#ffd60a" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<div class="deco" style="top: 50%; left: 5%; transform: rotate(-5deg);">
+  <svg width="32" height="44" viewBox="0 0 32 44">
+    <polygon points="18,2 6,24 14,24 10,42 26,18 18,18 24,2"
+      fill="#ffd60a" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<!-- ===== Progress Rail ===== -->
+<nav class="progress-rail" aria-label="Reading progress">
+  <div class="progress-dot active" data-label="TOP" data-target="hero"></div>
+  <div class="progress-dot" data-label="Rap Detector" data-target="project-1"></div>
+  <div class="progress-dot" data-label="Music Headset" data-target="project-2"></div>
+  <div class="progress-dot" data-label="Parkinson Bottle" data-target="project-3"></div>
+  <div class="progress-dot" data-label="Eye Exam" data-target="project-4"></div>
+  <div class="progress-dot" data-label="Impact App" data-target="project-5"></div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="hero">
+  <div class="hero-tag">PORTFOLIO 2026</div>
+  <div class="hero-bubble hero-bubble-1">hey!</div>
+  <div class="hero-bubble hero-bubble-2">nice to meet you!</div>
+  <h1 class="hero-big">TONY</h1>
+  <p class="hero-sub">
+    Engineering and design projects that show how I <strong>find real problems</strong>, <strong>build from scratch</strong>, and <strong>care about people</strong>.
+  </p>
+  <div class="hero-scroll">SCROLL ↓</div>
+</section>
+
+<!-- ===== Project 1: Rap Music Genre Detection (AI) ===== -->
+<section class="project" id="project-1">
+  <div class="project-number">01</div>
+  <div class="project-inner">
+    <div class="project-tag">AI / MACHINE LEARNING</div>
+    <div class="project-date">FEB — APR 2026</div>
+    <h2>Rap Music Genre Detection</h2>
+    <p class="project-subtitle">A website that classifies rap songs into sub-genres with an CNN & LSTM model — trained from a rap dataset I built from scratch, containing 8 genres.</p>
+
+    <div class="tech-row">
+      <span class="tech-chip">Artificial Intellegence</span>
+      <span class="tech-chip">Dataset Engineering</span>
+      <span class="tech-chip">Web Development</span>
+    </div>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">Dataset collection — 9 rap genres</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">Confusion matrix — 90% accuracy</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Interactive website — user input</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+          <div class="carousel-dot" data-index="2"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>New rap listeners or producers wanting to find songs/beats they love, but don't the name of their preferred sub-genre</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul>
+          <li>Built my own new dataset of rap music spanning 8 genres & 500+ songs (older versions online are dated back to 2019)</li>
+          <li>Trained an model using CNN to detect tone and LSTM to detect rythm, classify songs into sub-genres</li>
+          <li>Achieved 90% accuracy from a confusion matrix test</li>
+          <li>Developed an interactive website for users</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>Users can upload current songs they like, or simply play the music from the computer. The website will detect & output the sub-genre.</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-icon">★</div>
+      <div class="status-content">
+        <div class="status-label">Future plans</div>
+        <p>Expanding my dataset to more genres for satisfying wider needs, and including more songs to increase accuracy</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Project 2: Robotic Music Visualizer Headset ===== -->
+<section class="project" id="project-2">
+  <div class="project-number">02</div>
+  <div class="project-inner">
+    <div class="project-tag">ROBOTICS / HARDWARE</div>
+    <div class="project-date">APR — JUL 2026</div>
+    <h2>Robotic Music Visualizer Headset</h2>
+    <p class="project-subtitle">An interactive robotic headset that mimics a human face (eyes, eyebrows, mouth and head move), with emotional expressions that change according to the music played.</p>
+
+    <div class="tech-row">
+      <span class="tech-chip">SolidWorks modelling</span>
+      <span class="tech-chip">3D Printing</span>
+      <span class="tech-chip">AI integration with mechanical models</span>
+      <span class="tech-chip">Programming</span>
+      <span class="tech-chip">Fabrication of protptype</span>
+    </div>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">SolidWorks model design</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">3D printed pieces &amp; assembly</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Emotional expressions reacting to music</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+          <div class="carousel-dot" data-index="2"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>Music is usually experienced with ears only, or at most with a MV. I wanted to make it visible, where a simulated face can express emotions in the music.</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul>
+          <li>Designed the device with SolidWorks — movable eyes, eyebrows, mouth and head</li>
+          <li>3D printed the pieces and assembled the device</li>
+          <li>Coded emotional expressions that change according to the music played</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>Gives music a physical, expressive form — a human-like face that visualizes the emotion of any track in real time.</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-icon">✓</div>
+      <div class="status-content">
+        <div class="status-label">CURRENT STATUS</div>
+        <p>Working prototype assembled and coded. Next step: refining the emotion-to-music mapping and testing long-session durability.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Project 3: Parkinson's Bottle Device ===== -->
+<section class="project" id="project-3">
+  <div class="project-number">03</div>
+  <div class="project-inner">
+    <div class="project-tag">ACCESSIBILITY / HEALTH TECH</div>
+    <div class="project-date">APR — AUG 2024</div>
+    <h2>Parkinson's Bottle Device</h2>
+    <p class="project-subtitle">A bottle that reduces hand shaking and displays water temperature, connected to a mobile app that records progression of shaking patterns.</p>
+
+    <div class="tech-row">
+      <span class="tech-chip">Microprocessor</span>
+      <span class="tech-chip">3D Printing</span>
+      <span class="tech-chip">Sensors &amp; Actuators</span>
+      <span class="tech-chip">IoT</span>
+      <span class="tech-chip">Mobile App</span>
+    </div>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">Device prototype</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">Mobile app — shaking pattern data</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Patient feedback &amp; design iteration</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+          <div class="carousel-dot" data-index="2"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>Parkinson's patients struggle with everyday tasks, especially drinking. Existing solutions were too expensive or didn't match how people actually use them.</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul>
+          <li>Bottle with a belt that tightens the patient's hand to the bottle, to reduce shaking when drinking water</li>
+          <li>Sticker that turns red when water temperature exceeds 40 degrees celcius, intuitively displaying water temperature</li>
+          <li>Connected to a mobile app that interprets hand-shaking patterns to imply disease progression</li>
+          <li>Sent the device to a real patient, collected feedback and iterated on the design. Total cost went down while itrations bring more functions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>Safer, steadier drinking for Parkinson's patients, and a way to track shaking progression daily instead of effort-costing clinic visits.</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-icon">♥</div>
+      <div class="status-content">
+        <div class="status-label">Future plans</div>
+        <p>Applying errgonimics principles in the design of the product, making it even more comfortable and easy to use</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Project 4: Eye Exam Project ===== -->
+<section class="project" id="project-4">
+  <div class="project-number">04</div>
+  <div class="project-inner">
+    <div class="project-tag">REFLECTION / SIMPLE SOLUTIONS</div>
+    <div class="project-date">MAY — JUL 2024</div>
+    <h2>Automatic Eye Exam</h2>
+    <p class="project-subtitle">Software that automatically performs an eye exam without nurse assistance — with gesture recognition in the user interface, tested at 90% accuracy.</p>
+
+    <div class="tech-row">
+      <span class="tech-chip">Software Development</span>
+      <span class="tech-chip">Gesture Recognition</span>
+      <span class="tech-chip">UI Design</span>
+    </div>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">Gesture recognition UI</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">Student testing session</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Result comparison — 90% accuracy</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+          <div class="carousel-dot" data-index="2"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>Eye exams usually need trained nurses and dedicated equipment. I wanted to see if the same job could be done with much simpler tools — so more people could get tested.</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul>
+          <li>Designed and coded software that performs the exam automatically</li>
+          <li>Incorporated gesture recognition into the user interface</li>
+          <li>Tested with students — the software performed at 90% accuracy</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>An eye exam that runs itself — no nurse needed. "黑猫白猫，能抓到老鼠就是好猫": you don't need high-end tech to solve a real problem well.</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-icon">✎</div>
+      <div class="status-content">
+        <div class="status-label">CURRENT STATUS</div>
+        <p>Validated by student testing at 90% accuracy. Considering whether to expand to additional vision test types or keep it focused.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Project 5: Impact App ===== -->
+<section class="project" id="project-5">
+  <div class="project-number">05</div>
+  <div class="project-inner">
+    <div class="project-tag">CROSS-CULTURAL / SUSTAINABILITY</div>
+    <div class="project-date">OCT 2024 — JAN 2025</div>
+    <h2>The Impact App</h2>
+    <p class="project-subtitle">An app that grades a company's production sustainability using custom criteria summarized from existing frameworks like the ESG rating — powered by ChatGPT.</p>
+
+    <div class="tech-row">
+      <span class="tech-chip">App Development</span>
+      <span class="tech-chip">ChatGPT Integration</span>
+      <span class="tech-chip">Sustainability Frameworks</span>
+      <span class="tech-chip">Cross-cultural Collaboration</span>
+    </div>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">Grading criteria framework</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">App screens — company rating</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <div class="img-placeholder">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Team collaboration across time zones</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+          <div class="carousel-dot" data-index="2"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>Consumers can't easily tell how sustainable a company actually is. The team built a tool that makes environmental impact visible — built together across different cultures and time zones.</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul>
+          <li>Summarized a custom grading criteria from multiple existing frameworks (e.g. the ESG rating)</li>
+          <li>Integrated ChatGPT — the app generates sustainability ratings for any company name entered</li>
+          <li>Collaborated across cultures and time zones to reach the final outcome</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>Instant sustainability insight — type any company name, get a rating. And it taught me the power of design in driving global environmental impact.</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-icon">●</div>
+      <div class="status-content">
+        <div class="status-label">CURRENT STATUS</div>
+        <p>Launched with ChatGPT-powered ratings for any company. Team is exploring v2 with richer criteria and wider market coverage.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="footer-tag">TONY · ENGINEERING &amp; DESIGN</div>
+  <p>Five projects. One approach. Start from the real problem, build it yourself, and care about who uses it.</p>
+</footer>
+
+<script>
+// ===== Progress rail =====
+const dots = document.querySelectorAll('.progress-dot');
+const sections = ['hero', 'project-1', 'project-2', 'project-3', 'project-4', 'project-5'];
+
+function updateActiveDot() {
+  const scrollPos = window.scrollY + window.innerHeight / 2;
+  let currentIndex = 0;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.offsetTop <= scrollPos) currentIndex = i;
+  });
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentIndex);
+  });
+}
+window.addEventListener('scroll', updateActiveDot, { passive: true });
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = dot.dataset.target;
+    const el = document.getElementById(target);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// ===== Carousel =====
+document.querySelectorAll('[data-carousel]').forEach(carousel => {
+  const track = carousel.querySelector('.carousel-track');
+  const slides = carousel.querySelectorAll('.carousel-slide');
+  const prevBtn = carousel.querySelector('[data-prev]');
+  const nextBtn = carousel.querySelector('[data-next]');
+  const dots = carousel.querySelectorAll('.carousel-dot');
+  let currentIndex = 0;
+
+  function updateCarousel(index) {
+    currentIndex = index;
+    track.scrollTo({
+      left: slides[index].offsetLeft - track.offsetLeft,
+      behavior: 'smooth'
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+  }
+
+  prevBtn.addEventListener('click', () => {
+    const newIndex = (currentIndex - 1 + slides.length) % slides.length;
+    updateCarousel(newIndex);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    const newIndex = (currentIndex + 1) % slides.length;
+    updateCarousel(newIndex);
+  });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => updateCarousel(i));
+  });
+
+  track.addEventListener('scroll', () => {
+    const slideWidth = slides[0].offsetWidth + 16;
+    const index = Math.round(track.scrollLeft / slideWidth);
+    if (index !== currentIndex && index < slides.length) {
+      currentIndex = index;
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    }
+  });
+});
+</script>
+
+</body>
+</html>
