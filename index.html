@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tony — Engineering & Design Portfolio</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-weight='90' fill='%23FFD60A'>T</text></svg>">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Patrick+Hand&display=swap">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --paper: #ffffff;
+  --ink: #1a1a1a;
+  --ink-light: #555;
+  --yellow: #ffd60a;
+  --pink: #ff2d78;
+  --cyan: #00c8e5;
+  --orange: #ff6b1a;
+  --green: #7ed321;
+  --tape: rgba(255, 214, 10, 0.9);
+  --shadow-hard: 4px 4px 0 var(--ink);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.035) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.deco {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
+}
+.deco svg { display: block; }
+
+/* ===== Progress Rail ===== */
+.progress-rail {
+  position: fixed;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.progress-dot {
+  width: 16px; height: 16px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+}
+.progress-dot.active {
+  background: var(--yellow);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.progress-dot::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 28px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink);
+  opacity: 0;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+  letter-spacing: 0.5px;
+}
+.progress-dot:hover::after,
+.progress-dot.active::after { opacity: 1; }
+
+/* ===== Hero ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  padding: 60px 40px;
+  z-index: 2;
+}
+
+.hero-tag {
+  position: absolute;
+  top: 40px; right: 40px;
+  background: var(--pink);
+  color: #fff;
+  padding: 10px 18px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  transform: rotate(3deg);
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+
+.hero-big {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  font-size: clamp(80px, 18vw, 220px);
+  line-height: 0.9;
+  color: var(--ink);
+  text-transform: uppercase;
+  position: relative;
+  letter-spacing: -2px;
+  -webkit-text-stroke: 3px var(--ink);
+  paint-order: stroke fill;
+}
+
+.hero-bubble {
+  position: absolute;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  padding: 12px 20px;
+  font-family: 'Patrick Hand', 'Noto Sans SC', cursive;
+  font-size: 20px;
+  box-shadow: var(--shadow-hard);
+}
+.hero-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -12px; left: 30px;
+  width: 0; height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid var(--ink);
+}
+.hero-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -7px; left: 32px;
+  width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #fff;
+  z-index: 1;
+}
+.hero-bubble-1 { top: 20%; right: 15%; transform: rotate(-5deg); }
+.hero-bubble-2 { bottom: 25%; left: 12%; transform: rotate(4deg); }
+
+.hero-sub {
+  margin-top: 48px;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--ink);
+  text-align: center;
+  max-width: 520px;
+  line-height: 2.2;
+  position: relative;
+  z-index: 2;
+}
+.hero-sub strong {
+  color: var(--pink);
+  font-weight: 700;
+  background: linear-gradient(transparent 60%, var(--yellow) 60%);
+  padding: 0 4px;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 40px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink-light);
+  font-weight: 700;
+  animation: bounce 2s infinite;
+  z-index: 2;
+}
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* ===== Projects ===== */
+.project {
+  padding: 100px 40px;
+  position: relative;
+  border-top: 3px dashed rgba(0,0,0,0.15);
+  z-index: 2;
+}
+.project-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+
+.project-number {
+  position: absolute;
+  top: 40px; right: 20px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(80px, 12vw, 160px);
+  line-height: 1;
+  opacity: 0.06;
+  color: var(--ink);
+  pointer-events: none;
+  user-select: none;
+}
+
+.project-tag {
+  display: inline-block;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+}
+
+.project-date {
+  display: inline-block;
+  margin-left: 14px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--ink-light);
+}
+
+.project h2 {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  font-size: clamp(32px, 5vw, 56px);
+  line-height: 1.1;
+  margin-bottom: 12px;
+  color: var(--ink);
+}
+
+.project-subtitle {
+  font-size: 17px;
+  color: var(--ink-light);
+  margin-bottom: 20px;
+  font-weight: 400;
+  max-width: 760px;
+  line-height: 1.7;
+}
+
+/* ===== Image Carousel ===== */
+.carousel {
+  position: relative;
+  margin-bottom: 32px;
+  user-select: none;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
+}
+.carousel-track::-webkit-scrollbar { height: 6px; }
+.carousel-track::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); border-radius: 3px; }
+.carousel-track::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 3px; }
+
+.carousel-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  position: relative;
+}
+@media (min-width: 768px) {
+  .carousel-slide { flex: 0 0 calc(50% - 8px); }
+}
+
+/* 真实图片：比例不同也完整显示，不裁切 */
+.img-photo {
+  width: 100%;
+  height: 340px;
+  object-fit: contain;
+  display: block;
+  background: #ffffff;
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+@media (max-width: 768px) {
+  .img-photo { height: 270px; }
+}
+
+.img-placeholder {
+  background: #f8f8f5;
+  border: 3px dashed rgba(0,0,0,0.2);
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+}
+.img-placeholder .placeholder-label {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(0,0,0,0.3);
+}
+.img-placeholder .placeholder-note {
+  font-size: 12px;
+  color: rgba(0,0,0,0.25);
+  font-weight: 400;
+  text-align: center;
+  padding: 0 16px;
+}
+.img-placeholder::before {
+  content: '';
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 80px; height: 22px;
+  background: var(--tape);
+  border: 2px solid rgba(0,0,0,0.1);
+}
+
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.carousel-btn {
+  width: 40px; height: 40px;
+  border: 3px solid var(--ink);
+  background: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  transition: all 0.15s;
+}
+.carousel-btn:hover { background: var(--yellow); transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+.carousel-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+.carousel-dots { display: flex; gap: 8px; }
+.carousel-dot {
+  width: 10px; height: 10px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+}
+.carousel-dot.active { background: var(--ink); }
+
+/* ===== Project Content Grid ===== */
+.project-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 32px;
+}
+
+.project-block h3,
+.problem-block h3,
+.status-label {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid;
+  display: inline-block;
+}
+.project:nth-of-type(2) .project-block h3,
+.project:nth-of-type(2) .problem-block h3,
+.project:nth-of-type(2) .status-label { border-color: var(--yellow); color: #cc9900; }
+.project:nth-of-type(3) .project-block h3,
+.project:nth-of-type(3) .problem-block h3,
+.project:nth-of-type(3) .status-label { border-color: var(--pink); color: var(--pink); }
+.project:nth-of-type(4) .project-block h3,
+.project:nth-of-type(4) .problem-block h3,
+.project:nth-of-type(4) .status-label { border-color: var(--cyan); color: #0099b5; }
+.project:nth-of-type(5) .project-block h3,
+.project:nth-of-type(5) .problem-block h3,
+.project:nth-of-type(5) .status-label { border-color: var(--orange); color: var(--orange); }
+.project:nth-of-type(6) .project-block h3,
+.project:nth-of-type(6) .problem-block h3,
+.project:nth-of-type(6) .status-label { border-color: #5a9e00; color: #5a9e00; }
+
+.project-block p,
+.problem-block p,
+.status-callout p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-light);
+  margin-bottom: 12px;
+}
+
+.project-block ul { list-style: none; padding: 0; }
+.project-block ul li {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-light);
+  padding-left: 24px;
+  position: relative;
+  margin-bottom: 8px;
+}
+.project-block ul li::before {
+  content: '★';
+  position: absolute;
+  left: 0;
+  color: var(--yellow);
+  font-size: 14px;
+}
+
+/* HOW list: label + description lines */
+.how-list {
+  list-style: none;
+  padding: 0;
+}
+.how-list li {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-light);
+  margin-bottom: 10px;
+}
+.how-list .how-label {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ===== Problem Solved (plain block) ===== */
+.problem-block {
+  margin-bottom: 8px;
+}
+
+/* ===== Future Plans (plain block) ===== */
+.status-callout {
+  margin-bottom: 8px;
+}
+.status-content { }
+.status-label {
+  margin-bottom: 8px;
+}
+
+/* ===== View tabs ===== */
+.view-tabs {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  gap: 0;
+  border-bottom: 3px solid var(--ink);
+  position: relative;
+  z-index: 2;
+}
+.view-tab {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 13px 26px;
+  background: #fff;
+  color: var(--ink-light);
+  border: 3px solid var(--ink);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  margin-right: -3px;
+  margin-bottom: -3px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.view-tab:hover { background: #f4f4f0; color: var(--ink); }
+.view-tab.active {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+/* ===== Music view ===== */
+.music-view {
+  padding: 72px 40px 100px;
+  position: relative;
+  z-index: 2;
+}
+.music-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 48px;
+  align-items: stretch;
+}
+.music-eyebrow {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--ink-light);
+  margin-bottom: 20px;
+}
+.album-column { display: flex; flex-direction: column; gap: 20px; }
+
+.album-card {
+  position: relative;
+  padding: 0;
+  border: 3px solid var(--ink);
+  background: #fff;
+  cursor: pointer;
+  box-shadow: var(--shadow-hard);
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  overflow: hidden;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+.album-card:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+.album-card.active {
+  border-color: var(--ink);
+  box-shadow: 6px 6px 0 var(--pink);
+}
+.album-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #f6f6f2;
+  z-index: 2;
+}
+.album-num {
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 3;
+  background: var(--ink);
+  color: #fff;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+}
+.album-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(0,0,0,0.25);
+  pointer-events: none;
+}
+.album-playing {
+  position: absolute;
+  bottom: 0; right: 0;
+  z-index: 3;
+  background: var(--pink);
+  color: #fff;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  padding: 5px 9px;
+  display: none;
+}
+.album-card.active .album-playing { display: block; }
+
+/* Player */
+.player-panel {
+  border: 3px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--ink);
+  background: #fff;
+  padding: 44px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.player-label {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--ink-light);
+  margin-bottom: 20px;
+}
+.player-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 34px;
+}
+.player-cover-wrap {
+  width: 104px;
+  height: 104px;
+  flex-shrink: 0;
+  border: 3px solid var(--ink);
+  background: #f6f6f2;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.player-cover-ph {
+  width: 38px;
+  height: 38px;
+  opacity: 0.35;
+}
+.player-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.player-headinfo { flex: 1; min-width: 0; }
+.player-title {
+  font-family: 'Archivo Black', 'Noto Sans SC', sans-serif;
+  font-size: clamp(22px, 2.6vw, 34px);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+.player-sub {
+  font-size: 12.5px;
+  color: var(--ink-light);
+}
+.player-bar {
+  height: 14px;
+  border: 3px solid var(--ink);
+  background: #f4f4f0;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.player-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--yellow);
+  transition: width 0.1s linear;
+}
+.player-time {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  color: var(--ink-light);
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+.player-controls { display: flex; align-items: center; gap: 20px; }
+.play-btn {
+  width: 76px; height: 76px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  background: var(--yellow);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform 0.12s, box-shadow 0.12s;
+  flex-shrink: 0;
+}
+.play-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+.play-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.play-btn svg { width: 30px; height: 30px; }
+.play-btn .icon-play { display: block; margin-left: 3px; }
+.play-btn .icon-pause { display: none; }
+.play-btn.is-playing .icon-play { display: none; }
+.play-btn.is-playing .icon-pause { display: block; }
+.player-tip {
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.6;
+}
+.player-notice {
+  margin-top: 24px;
+  padding: 16px 18px;
+  border: 2px dashed rgba(0,0,0,0.25);
+  background: #fafaf7;
+  font-size: 12.5px;
+  line-height: 1.8;
+  color: var(--ink-light);
+}
+.player-notice strong { color: var(--ink); }
+.player-notice code {
+  font-family: 'Space Grotesk', monospace;
+  background: #f0f0ea;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+/* ===== Footer ===== */
+.footer {
+  padding: 80px 40px 60px;
+  text-align: center;
+  border-top: 3px dashed rgba(0,0,0,0.15);
+  position: relative;
+  z-index: 2;
+}
+.footer-tag {
+  display: inline-block;
+  background: var(--yellow);
+  color: var(--ink);
+  padding: 12px 28px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  transform: rotate(-1deg);
+  margin-bottom: 24px;
+  border: 3px solid var(--ink);
+  box-shadow: var(--shadow-hard);
+}
+.footer p {
+  font-size: 14px;
+  color: var(--ink-light);
+  font-weight: 400;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .progress-rail { display: none; }
+  .project-number { display: none; }
+  .project-grid { grid-template-columns: 1fr; gap: 32px; }
+  .hero { padding: 40px 24px; }
+  .hero-tag { top: 20px; right: 20px; }
+  .hero-bubble-1 { right: 5%; top: 15%; font-size: 16px; padding: 8px 14px; }
+  .hero-bubble-2 { left: 5%; bottom: 20%; font-size: 16px; padding: 8px 14px; }
+  .project { padding: 60px 24px; }
+  .deco { display: none; }
+
+  .view-tabs { padding: 0 16px; margin-top: 8px; }
+  .view-tab {
+    flex: 1;
+    font-size: 9px;
+    letter-spacing: 0.3px;
+    padding: 11px 6px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .music-view { padding: 40px 24px 60px; }
+  .music-inner { grid-template-columns: 1fr; gap: 36px; }
+  .album-column {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .music-eyebrow { grid-column: 1 / -1; margin-bottom: 6px; font-size: 9px; }
+  .album-hint { font-size: 8px; letter-spacing: 1.5px; }
+  .album-num { font-size: 9px; padding: 3px 6px; }
+  .player-panel { padding: 26px 22px 30px; position: static; box-shadow: 6px 6px 0 var(--ink); }
+  .player-sub { margin-bottom: 24px; }
+  .player-time { margin-bottom: 22px; }
+  .play-btn { width: 62px; height: 62px; }
+  .play-btn svg { width: 24px; height: 24px; }
+}
+</style>
+<script>
+// 图片加载失败时自动换扩展名，都没有才显示占位框
+// 放在 body 之前：图片 error 早于页面底部脚本，必须提前定义
+var IMG_EXTS = ['jpg', 'jpeg', 'PNG', 'JPG', 'webp'];
+function imgFallback(img) {
+  var base = img.getAttribute('data-base');
+  var tries = parseInt(img.getAttribute('data-tries') || '0', 10);
+  if (base && tries < IMG_EXTS.length) {
+    img.setAttribute('data-tries', tries + 1);
+    img.src = base + '.' + IMG_EXTS[tries];
+    return;
+  }
+  img.style.display = 'none';
+  var ph = img.parentElement.querySelector('.img-placeholder');
+  if (ph) ph.style.display = 'flex';
+}
+</script>
+</head>
+<body>
+
+<!-- ===== Cartoon Decorations ===== -->
+<div class="deco" style="top: 15%; left: 8%; transform: rotate(-15deg);">
+  <svg width="48" height="60" viewBox="0 0 48 60" fill="none">
+    <rect x="14" y="2" width="20" height="30" rx="10" fill="#1a1a1a"/>
+    <rect x="18" y="8" width="12" height="3" rx="1.5" fill="#ffd60a"/>
+    <rect x="18" y="14" width="12" height="3" rx="1.5" fill="#ffd60a"/>
+    <rect x="18" y="20" width="12" height="3" rx="1.5" fill="#ffd60a"/>
+    <path d="M24 32 L24 44" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/>
+    <path d="M16 44 L32 44" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round"/>
+  </svg>
+</div>
+
+<div class="deco" style="top: 22%; right: 12%; transform: rotate(10deg);">
+  <svg width="36" height="48" viewBox="0 0 36 48" fill="none">
+    <ellipse cx="10" cy="40" rx="8" ry="6" fill="#ff2d78" transform="rotate(-20 10 40)"/>
+    <path d="M18 38 L18 6 L30 2" stroke="#1a1a1a" stroke-width="3" fill="none"/>
+    <path d="M18 6 L30 2 L30 14 L18 18" fill="#ff2d78" stroke="#1a1a1a" stroke-width="3" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<div class="deco" style="bottom: 30%; left: 20%; transform: rotate(-8deg);">
+  <svg width="24" height="32" viewBox="0 0 24 32" fill="none">
+    <ellipse cx="7" cy="26" rx="6" ry="4.5" fill="#00c8e5" transform="rotate(-20 7 26)"/>
+    <path d="M13 24 L13 4 L21 1" stroke="#1a1a1a" stroke-width="2.5" fill="none"/>
+  </svg>
+</div>
+
+<div class="deco" style="top: 35%; right: 8%; transform: rotate(5deg);">
+  <svg width="60" height="70" viewBox="0 0 60 70" fill="none">
+    <path d="M10 10 Q30 35 50 10" stroke="#1a1a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <circle cx="10" cy="10" r="3" fill="#ffd60a" stroke="#1a1a1a" stroke-width="2"/>
+    <circle cx="20" cy="20" r="2.5" fill="#ff2d78" stroke="#1a1a1a" stroke-width="1.5"/>
+    <circle cx="30" cy="26" r="3" fill="#00c8e5" stroke="#1a1a1a" stroke-width="2"/>
+    <circle cx="40" cy="20" r="2.5" fill="#ff6b1a" stroke="#1a1a1a" stroke-width="1.5"/>
+    <circle cx="50" cy="10" r="3" fill="#7ed321" stroke="#1a1a1a" stroke-width="2"/>
+    <path d="M30 29 L30 42" stroke="#1a1a1a" stroke-width="2"/>
+    <polygon points="30,55 24,44 36,44" fill="#ffd60a" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<div class="deco" style="top: 8%; left: 30%; transform: rotate(-10deg);">
+  <svg width="28" height="28" viewBox="0 0 28 28">
+    <polygon points="14,2 17,10 26,10 19,16 22,25 14,19 6,25 9,16 2,10 11,10"
+      fill="#ffd60a" stroke="#1a1a1a" stroke-width="2" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<div class="deco" style="top: 50%; left: 5%; transform: rotate(-5deg);">
+  <svg width="32" height="44" viewBox="0 0 32 44">
+    <polygon points="18,2 6,24 14,24 10,42 26,18 18,18 24,2"
+      fill="#ffd60a" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+  </svg>
+</div>
+
+<!-- ===== Progress Rail ===== -->
+<nav class="progress-rail" aria-label="Reading progress">
+  <div class="progress-dot active" data-label="TOP" data-target="hero"></div>
+  <div class="progress-dot" data-label="Rap Detector" data-target="project-1"></div>
+  <div class="progress-dot" data-label="Music Headset" data-target="project-2"></div>
+  <div class="progress-dot" data-label="Parkinson Bottle" data-target="project-3"></div>
+  <div class="progress-dot" data-label="Eye Exam" data-target="project-4"></div>
+  <div class="progress-dot" data-label="Impact App" data-target="project-5"></div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="hero">
+  <div class="hero-tag">PORTFOLIO 2026</div>
+  <div class="hero-bubble hero-bubble-1">hey!</div>
+  <div class="hero-bubble hero-bubble-2">nice to meet you!</div>
+  <h1 class="hero-big">TONY</h1>
+  <p class="hero-sub">
+    Engineering and design projects that show how I <strong>find real problems</strong>, <strong>build from scratch</strong>, and <strong>care about people</strong>.
+  </p>
+  <div class="hero-scroll">SCROLL ↓</div>
+</section>
+
+<!-- ===== View switch ===== -->
+<nav class="view-tabs" role="tablist" aria-label="Portfolio sections">
+  <button class="view-tab active" data-view="engineering" role="tab" aria-selected="true">Engineering Projects</button>
+  <button class="view-tab" data-view="music" role="tab" aria-selected="false">Music Projects</button>
+</nav>
+
+<!-- ===== Project 1: Rap Music Genre Detection (AI) ===== -->
+<section class="project" id="project-1">
+  <div class="project-number">01</div>
+  <div class="project-inner">
+    <div class="project-tag">AI / MACHINE LEARNING</div>
+    <div class="project-date">FEB — APR 2026</div>
+    <h2>Rap Music Genre Detection</h2>
+    <p class="project-subtitle">A website that classifies rap songs into sub-genres with an CNN & LSTM model — trained from a rap dataset I built from scratch, containing 8 genres.</p>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/01-1.png" data-base="images/01-1" alt="Dataset collection — 9 rap genres" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">Dataset collection — 9 rap genres</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/01-2.png" data-base="images/01-2" alt="Confusion matrix — 90% accuracy" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">Confusion matrix — 90% accuracy</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/01-3.png" data-base="images/01-3" alt="Interactive website — user input" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Interactive website — user input</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>New rap listeners or producers wanting to find songs/beats they love, but don't the name of their preferred sub-genre</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul class="how-list">
+          <li><span class="how-label">Dataset Engineering：</span>Built my own new dataset of rap music spanning 8 genres & 500+ songs (older versions online are dated back to 2019)</li>
+          <li><span class="how-label">AI training：</span>Trained a model using CNN to detect tone and LSTM to detect rhythm, classify songs into sub-genres</li>
+          <li><span class="how-label">Web development：</span>Developed an interactive website for users</li>
+          <li>Achieved 90% accuracy from a confusion matrix test</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>Users can upload current songs they like, or simply play the music from the computer. The website will detect & output the sub-genre.</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-content">
+        <div class="status-label">FUTURE PLANS</div>
+        <p>Expanding my dataset to more genres for satisfying wider needs, and including more songs to increase accuracy</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Project 2: Robotic Music Visualizer Headset ===== -->
+<section class="project" id="project-2">
+  <div class="project-number">02</div>
+  <div class="project-inner">
+    <div class="project-tag">ROBOTICS / HARDWARE</div>
+    <div class="project-date">APR — JUL 2026</div>
+    <h2>Robotic Music Visualizer Headset</h2>
+    <p class="project-subtitle">An interactive robotic headset that mimics a human face (eyes, eyebrows, mouth and head move), with emotional expressions that change according to the music played.</p>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/02-1.png" data-base="images/02-1" alt="SolidWorks model design" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">SolidWorks model design</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/02-2.png" data-base="images/02-2" alt="3D printed pieces &amp; assembly" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">3D printed pieces &amp; assembly</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/02-3.png" data-base="images/02-3" alt="Emotional expressions reacting to music" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Emotional expressions reacting to music</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>Music is usually experienced with ears only, or at most with a MV. I wanted to make it visible, where a simulated face can express emotions in the music.</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul class="how-list">
+          <li><span class="how-label">3D Modelling：</span>Designed the device with SolidWorks — movable eyes, eyebrows, mouth and head</li>
+          <li><span class="how-label">Fabrication：</span>3D printed the pieces and assembled the device</li>
+          <li><span class="how-label">Programming：</span>Coded emotional expressions that change according to the music played</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>Gives music a physical, expressive form — a human-like face that visualizes the emotion of any track in real time.</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-content">
+        <div class="status-label">FUTURE PLANS</div>
+        <p>Working prototype assembled and coded. Next step: refining the emotion-to-music mapping and testing long-session durability.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Project 3: Parkinson's Bottle Device ===== -->
+<section class="project" id="project-3">
+  <div class="project-number">03</div>
+  <div class="project-inner">
+    <div class="project-tag">ACCESSIBILITY / HEALTH TECH</div>
+    <div class="project-date">APR — AUG 2024</div>
+    <h2>Parkinson's Bottle Device</h2>
+    <p class="project-subtitle">A bottle that reduces hand shaking and displays water temperature, connected to a mobile app that records progression of shaking patterns.</p>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/03-1.png" data-base="images/03-1" alt="Device prototype" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">Device prototype</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/03-2.png" data-base="images/03-2" alt="Mobile app — shaking pattern data" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">Mobile app — shaking pattern data</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/03-3.png" data-base="images/03-3" alt="Patient feedback &amp; design iteration" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Patient feedback &amp; design iteration</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>Parkinson's patients struggle with everyday tasks, especially drinking. Existing solutions were too expensive or didn't match how people actually use them.</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul class="how-list">
+          <li><span class="how-label">Mechanical Design：</span>Bottle with a belt that tightens the patient's hand to the bottle, to reduce shaking when drinking water</li>
+          <li><span class="how-label">Temperature Display：</span>Sticker that turns red when water temperature exceeds 40 degrees Celsius, intuitively displaying water temperature</li>
+          <li><span class="how-label">Mobile App：</span>Connected to a mobile app that interprets hand-shaking patterns to imply disease progression</li>
+          <li><span class="how-label">User Testing：</span>Sent the device to a real patient, collected feedback and iterated on the design. Total cost went down while iterations bring more functions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>Safer, steadier drinking for Parkinson's patients, and a way to track shaking progression daily instead of effort-costing clinic visits.</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-content">
+        <div class="status-label">FUTURE PLANS</div>
+        <p>Applying ergonomics principles in the design of the product, making it even more comfortable and easy to use</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Project 4: Eye Exam Project ===== -->
+<section class="project" id="project-4">
+  <div class="project-number">04</div>
+  <div class="project-inner">
+    <div class="project-tag">REFLECTION / SIMPLE SOLUTIONS</div>
+    <div class="project-date">MAY — JUL 2024</div>
+    <h2>Automatic Eye Exam</h2>
+    <p class="project-subtitle">Software that automatically performs an eye exam without nurse assistance, using gesture recognition in the user interface.</p>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/04-1.png" data-base="images/04-1" alt="Gesture recognition UI" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">Gesture recognition UI</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/04-2.png" data-base="images/04-2" alt="Student testing session" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">Student testing session</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/04-3.png" data-base="images/04-3" alt="Result comparison — 90% accuracy" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Result comparison — 90% accuracy</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>Eye exams usually need the nurse to stand and work for a whole day. I wanted to see if the same job could be done with technology so nurses can get more rest.</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul class="how-list">
+          <li><span class="how-label">Software：</span>Designed when I was year 9, using scratch - this led me know that even basic technology can solve problems</li>
+          <li><span class="how-label">Gesture UI：</span>Incorporated gesture recognition into the user interface</li>
+          <li><span class="how-label">Testing：</span>Tested with students the software performed at 90% accuracy</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>An eye exam that runs itself, with no nurse needed</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-content">
+        <div class="status-label">FUTURE PLANS</div>
+        <p>Work with biomedical students to help standaidize the size of "E"s on my software, making the test scientific</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Project 5: Company Sustainability Impact App ===== -->
+<section class="project" id="project-5">
+  <div class="project-number">05</div>
+  <div class="project-inner">
+    <div class="project-tag">CROSS-CULTURAL / SUSTAINABILITY</div>
+    <div class="project-date">OCT 2024 — JAN 2025</div>
+    <h2>Company Sustainability Impact App</h2>
+    <p class="project-subtitle">An app that grades a company's production sustainability using custom criteria summarized from existing frameworks like the ESG rating, powered by ChatGPT.</p>
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-track">
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/05-1.png" data-base="images/05-1" alt="Grading criteria framework" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 1 ]</div>
+            <div class="placeholder-note">Grading criteria framework</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/05-2.png" data-base="images/05-2" alt="App screens — company rating" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 2 ]</div>
+            <div class="placeholder-note">App screens — company rating</div>
+          </div>
+        </div>
+        <div class="carousel-slide">
+          <img class="img-photo" src="images/05-3.png" data-base="images/05-3" alt="Team collaboration across time zones" onerror="imgFallback(this)">
+          <div class="img-placeholder" style="display:none">
+            <div class="placeholder-label">[ IMAGE 3 ]</div>
+            <div class="placeholder-note">Team collaboration across time zones</div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-nav">
+        <button class="carousel-btn" data-prev aria-label="Previous">←</button>
+        <div class="carousel-dots">
+          <div class="carousel-dot active" data-index="0"></div>
+          <div class="carousel-dot" data-index="1"></div>
+        </div>
+        <button class="carousel-btn" data-next aria-label="Next">→</button>
+      </div>
+    </div>
+
+    <div class="project-grid">
+      <div class="project-block">
+        <h3>WHY THIS PROJECT</h3>
+        <p>Consumers can't easily tell how sustainable a company actually is. The team built a tool that makes environmental impact visible — built together across different cultures and time zones.</p>
+      </div>
+      <div class="project-block">
+        <h3>HOW I MADE IT</h3>
+        <ul class="how-list">
+          <li><span class="how-label">Sustainability Criteria：</span>Summarized a custom grading criteria from multiple existing frameworks (e.g. the ESG rating)</li>
+          <li><span class="how-label">AI Integration：</span>Integrated ChatGPT — the app generates sustainability ratings for any company name entered</li>
+          <li><span class="how-label">Collaboration：</span>Collaborated across cultures and time zones to reach the final outcome</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="problem-block">
+      <h3>PROBLEM SOLVED</h3>
+      <p>Instant sustainability insigh: type any company name, and get a rating. It taught me the power of design in driving global environmental impact.</p>
+    </div>
+
+    <div class="status-callout">
+      <div class="status-content">
+        <div class="status-label">FUTURE PLANS</div>
+        <p>Train own AI model with dataset, to improve accuracy of rating.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Music view ===== -->
+<section class="music-view" id="music" hidden>
+  <div class="music-inner">
+    <div class="album-column">
+      <div class="music-eyebrow">LIL TOTODOG · E.N.DOUBLE 4L</div>
+
+      <button class="album-card active" data-track="0" aria-label="Play track 1">
+        <img class="album-art" src="images/album-1.png" data-base="images/album-1" alt="Album cover 1" onerror="imgFallback(this)">
+        <span class="album-num">01</span>
+        <span class="album-hint">[ ALBUM 1 ]</span>
+        <span class="album-playing">PLAYING</span>
+      </button>
+
+      <button class="album-card" data-track="1" aria-label="Play track 2">
+        <img class="album-art" src="images/album-2.png" data-base="images/album-2" alt="Album cover 2" onerror="imgFallback(this)">
+        <span class="album-num">02</span>
+        <span class="album-hint">[ ALBUM 2 ]</span>
+        <span class="album-playing">PLAYING</span>
+      </button>
+
+      <button class="album-card" data-track="2" aria-label="Play track 3">
+        <img class="album-art" src="images/album-3.png" data-base="images/album-3" alt="Album cover 3" onerror="imgFallback(this)">
+        <span class="album-num">03</span>
+        <span class="album-hint">[ ALBUM 3 ]</span>
+        <span class="album-playing">PLAYING</span>
+      </button>
+    </div>
+
+    <div class="player-panel">
+      <div class="player-label">NOW PLAYING</div>
+
+      <div class="player-head">
+        <div class="player-cover-wrap">
+          <svg class="player-cover-ph" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="18" r="2.6"/><circle cx="18" cy="16" r="2.6"/><path d="M9.6 18V6.5l10.7-2v11.2"/></svg>
+          <img class="player-cover" id="playerCover" src="images/album-1.png" alt="" onerror="this.style.display='none'">
+        </div>
+        <div class="player-headinfo">
+          <div class="player-title" id="playerTitle">TRACK 01</div>
+          <div class="player-sub" id="playerSub">Lil Totodog · E.N.DOUBLE 4L</div>
+        </div>
+      </div>
+
+      <div class="player-bar" id="playerBar" role="slider" aria-label="Seek" tabindex="0">
+        <div class="player-fill" id="playerFill"></div>
+      </div>
+      <div class="player-time">
+        <span id="timeNow">0:00</span>
+        <span id="timeTotal">0:00</span>
+      </div>
+
+      <div class="player-controls">
+        <button class="play-btn" id="playBtn" aria-label="Play">
+          <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><polygon points="8,5 19,12 8,18" fill="#1a1a1a"></polygon></svg>
+          <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="5" width="3.5" height="14" fill="#1a1a1a"></rect><rect x="14" y="5" width="3.5" height="14" fill="#1a1a1a"></rect></svg>
+        </button>
+        <div class="player-tip" id="playerTip">Pick a cover to play</div>
+      </div>
+
+      <div class="player-notice" id="playerNotice" hidden>
+        <strong>音频还没放进来。</strong><br>
+        把说唱音频命名为 <code>track-1.mp3</code>、<code>track-2.mp3</code>、<code>track-3.mp3</code>，放进 <code>audio/</code> 文件夹，刷新即可播放。
+      </div>
+    </div>
+  </div>
+  <audio id="audio" preload="none"></audio>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="footer-tag">TONY · ENGINEERING &amp; DESIGN</div>
+  <p>Five projects. One approach. Start from the real problem, build it yourself, and care about who uses it.</p>
+</footer>
+
+<script>
+// ===== Progress rail =====
+const dots = document.querySelectorAll('.progress-dot');
+const sections = ['hero', 'project-1', 'project-2', 'project-3', 'project-4', 'project-5'];
+
+function updateActiveDot() {
+  const scrollPos = window.scrollY + window.innerHeight / 2;
+  let currentIndex = 0;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.offsetTop <= scrollPos) currentIndex = i;
+  });
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('active', i === currentIndex);
+  });
+}
+window.addEventListener('scroll', updateActiveDot, { passive: true });
+
+dots.forEach(dot => {
+  dot.addEventListener('click', () => {
+    const target = dot.dataset.target;
+    const el = document.getElementById(target);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// ===== Carousel =====
+// 按实际可见的张数算位置：桌面一屏 2 张 → 2 个点（1&2 / 2&3），手机一屏 1 张 → 3 个点
+document.querySelectorAll('[data-carousel]').forEach(carousel => {
+  const track = carousel.querySelector('.carousel-track');
+  const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+  const prevBtn = carousel.querySelector('[data-prev]');
+  const nextBtn = carousel.querySelector('[data-next]');
+  const dotsWrap = carousel.querySelector('.carousel-dots');
+  let currentIndex = 0;
+
+  function visibleCount() {
+    const slideW = slides[0].offsetWidth;
+    const gap = 16;
+    const fit = Math.floor((track.clientWidth + gap) / (slideW + gap));
+    return Math.max(1, Math.min(slides.length, fit));
+  }
+
+  function totalPositions() {
+    return Math.max(1, slides.length - visibleCount() + 1);
+  }
+
+  function buildDots() {
+    const total = totalPositions();
+    dotsWrap.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'carousel-dot' + (i === currentIndex ? ' active' : '');
+      dot.dataset.index = i;
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  function syncDots() {
+    Array.from(dotsWrap.children).forEach((d, i) => {
+      d.classList.toggle('active', i === currentIndex);
+    });
+  }
+
+  function goTo(index) {
+    const total = totalPositions();
+    currentIndex = Math.max(0, Math.min(index, total - 1));
+    const target = slides[currentIndex];
+    track.scrollTo({
+      left: target.offsetLeft - track.offsetLeft,
+      behavior: 'smooth'
+    });
+    syncDots();
+  }
+
+  prevBtn.addEventListener('click', () => {
+    const total = totalPositions();
+    goTo((currentIndex - 1 + total) % total);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    const total = totalPositions();
+    goTo((currentIndex + 1) % total);
+  });
+
+  track.addEventListener('scroll', () => {
+    const slideW = slides[0].offsetWidth + 16;
+    let idx = Math.round(track.scrollLeft / slideW);
+    idx = Math.max(0, Math.min(idx, totalPositions() - 1));
+    if (idx !== currentIndex) {
+      currentIndex = idx;
+      syncDots();
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    const total = totalPositions();
+    if (currentIndex > total - 1) currentIndex = total - 1;
+    buildDots();
+  });
+
+  buildDots();
+});
+
+// ===== 视图切换：Engineering Projects / Music Projects =====
+const viewTabs = document.querySelectorAll('.view-tab');
+const engViewNodes = document.querySelectorAll('.project');
+const musicViewNode = document.getElementById('music');
+const railNode = document.querySelector('.progress-rail');
+
+function setView(view) {
+  const isMusic = view === 'music';
+  engViewNodes.forEach(el => { el.hidden = isMusic; });
+  if (musicViewNode) musicViewNode.hidden = !isMusic;
+  if (railNode) railNode.style.display = isMusic ? 'none' : '';
+  viewTabs.forEach(tab => {
+    const on = tab.dataset.view === view;
+    tab.classList.toggle('active', on);
+    tab.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+}
+
+viewTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    setView(tab.dataset.view);
+    const nav = document.querySelector('.view-tabs');
+    if (nav) nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ===== Music player =====
+const TRACKS = [
+  { title: 'TRACK 01' },
+  { title: 'TRACK 02' },
+  { title: 'TRACK 03' }
+];
+const AUDIO_EXTS = ['mp3', 'm4a', 'wav'];
+
+const audioEl = document.getElementById('audio');
+const playBtnEl = document.getElementById('playBtn');
+const barEl = document.getElementById('playerBar');
+const fillEl = document.getElementById('playerFill');
+const nowEl = document.getElementById('timeNow');
+const totalEl = document.getElementById('timeTotal');
+const titleEl = document.getElementById('playerTitle');
+const noticeEl = document.getElementById('playerNotice');
+const tipEl = document.getElementById('playerTip');
+const albumCards = document.querySelectorAll('.album-card');
+const coverEl = document.getElementById('playerCover');
+
+let trackIndex = 0;
+let extIndex = 0;
+
+function fmtTime(sec) {
+  if (!isFinite(sec) || sec < 0) sec = 0;
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return m + ':' + (s < 10 ? '0' + s : s);
+}
+
+function loadTrack(i, autoplay) {
+  trackIndex = i;
+  extIndex = 0;
+  if (titleEl) titleEl.textContent = TRACKS[i].title;
+  albumCards.forEach((card, idx) => card.classList.toggle('active', idx === i));
+  // 播放器里的小封面跟着左边选中的那张走
+  if (coverEl) {
+    coverEl.style.display = '';
+    coverEl.src = 'images/album-' + (i + 1) + '.png';
+  }
+  if (noticeEl) noticeEl.hidden = true;
+  if (tipEl) tipEl.textContent = 'Track ' + (i + 1) + ' selected';
+  if (audioEl) {
+    audioEl.src = 'audio/track-' + (i + 1) + '.' + AUDIO_EXTS[0];
+    audioEl.load();
+    if (autoplay) {
+      const p = audioEl.play();
+      if (p && p.catch) p.catch(() => {});
+    }
+  }
+}
+
+if (audioEl) {
+  audioEl.addEventListener('error', () => {
+    if (extIndex < AUDIO_EXTS.length - 1) {
+      extIndex++;
+      audioEl.src = 'audio/track-' + (trackIndex + 1) + '.' + AUDIO_EXTS[extIndex];
+      audioEl.load();
+      return;
+    }
+    if (noticeEl) noticeEl.hidden = false;
+    if (tipEl) tipEl.textContent = 'Audio slot empty';
+  });
+
+  audioEl.addEventListener('timeupdate', () => {
+    if (audioEl.duration) {
+      const pct = (audioEl.currentTime / audioEl.duration) * 100;
+      if (fillEl) fillEl.style.width = pct + '%';
+      if (nowEl) nowEl.textContent = fmtTime(audioEl.currentTime);
+    }
+  });
+
+  audioEl.addEventListener('loadedmetadata', () => {
+    if (totalEl) totalEl.textContent = fmtTime(audioEl.duration);
+  });
+
+  audioEl.addEventListener('play', () => {
+    if (playBtnEl) playBtnEl.classList.add('is-playing');
+  });
+
+  audioEl.addEventListener('pause', () => {
+    if (playBtnEl) playBtnEl.classList.remove('is-playing');
+  });
+
+  audioEl.addEventListener('ended', () => {
+    if (playBtnEl) playBtnEl.classList.remove('is-playing');
+    if (fillEl) fillEl.style.width = '0%';
+    if (nowEl) nowEl.textContent = fmtTime(0);
+  });
+}
+
+albumCards.forEach((card, i) => {
+  card.addEventListener('click', () => loadTrack(i, true));
+});
+
+if (playBtnEl) {
+  playBtnEl.addEventListener('click', () => {
+    if (!audioEl) return;
+    if (!audioEl.getAttribute('src')) {
+      loadTrack(trackIndex, true);
+      return;
+    }
+    if (audioEl.paused) {
+      const p = audioEl.play();
+      if (p && p.catch) p.catch(() => {});
+    } else {
+      audioEl.pause();
+    }
+  });
+}
+
+if (barEl) {
+  barEl.addEventListener('click', e => {
+    if (!audioEl || !audioEl.duration) return;
+    const rect = barEl.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    audioEl.currentTime = ratio * audioEl.duration;
+  });
+  barEl.addEventListener('keydown', e => {
+    if (!audioEl || !audioEl.duration) return;
+    if (e.key === 'ArrowRight') audioEl.currentTime += 3;
+    if (e.key === 'ArrowLeft') audioEl.currentTime -= 3;
+  });
+}
+
+// 预检第 1 首，让缺音频时能立刻提示
+if (audioEl) loadTrack(0, false);
+</script>
+
+</body>
+</html>
